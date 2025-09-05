@@ -27,7 +27,8 @@ def argument_parser():
     return parser
 
 def main(args):
-    model = AutoModelForCausalLM.from_pretrained(args.model_name_or_path, trust_remote_code=True, device_map="auto", temperature=args.temperature)
+    # model = AutoModelForCausalLM.from_pretrained(args.model_name_or_path, trust_remote_code=True, device_map="auto", temperature=args.temperature)
+    # ref_model = AutoModelForCausalLM.from_pretrained(args.model_name_or_path, trust_remote_code=True, device_map="auto", temperature=args.temperature)
     tokenizer = AutoTokenizer.from_pretrained(args.model_name_or_path, trust_remote_code=True, device_map="auto")
     training_args = DPOConfig(
         output_dir=args.output_dir,
@@ -46,7 +47,7 @@ def main(args):
     # print("[DEBUG] train_dataset columns:", train_dataset.column_names)
     # print("[DEBUG] train_dataset example:", train_dataset[0])
 
-    trainer = RappoTrainer(model=model, args=training_args, processing_class=tokenizer, train_dataset=train_dataset)
+    trainer = RappoTrainer(model=args.model_name_or_path, ref_model=args.model_name_or_path, args=training_args, processing_class=tokenizer, train_dataset=train_dataset)
     # trainer = DPOTrainer(model=model, args=training_args, processing_class=tokenizer, train_dataset=train_dataset)
     trainer.train()
 
