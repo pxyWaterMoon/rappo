@@ -286,8 +286,12 @@ class DPOTrainer(Trainer):
         else:
             if hasattr(processing_class, "pad_token_id") and processing_class.pad_token_id is not None:
                 self.padding_value = processing_class.pad_token_id
+            elif hasattr(processing_class, "eos_token_id") and processing_class.eos_token_id is not None:
+                self.padding_value = processing_class.eos_token_id
             elif hasattr(processing_class, "tokenizer") and processing_class.tokenizer.pad_token_id is not None:
                 self.padding_value = processing_class.tokenizer.pad_token_id
+            elif hasattr(processing_class, "tokenizer") and processing_class.tokenizer.eos_token_id is not None:
+                self.padding_value = processing_class.tokenizer.eos_token_id
             else:
                 raise ValueError(
                     "`padding_value` is not specified in `DPOConfig`, and `pad_token_id` is missing in the "
