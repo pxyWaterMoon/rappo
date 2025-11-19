@@ -402,6 +402,14 @@ class DPOConfig(TrainingArguments):
             "equivalent to the standard DPO loss. The paper recommends setting `ld_alpha` between `0.0` and `1.0`.",
         },
     )
+    r_dpo_alpha: Optional[float] = field(
+        default=None,
+        metadata={
+            "help": "α parameter from the R-DPO paper, which controls the penalty force of the verbose token "
+            "log-probabilities in responses. If `None`, no weighting is applied to the verbose part, and the loss is "
+            "equivalent to the standard DPO loss. The paper recommends setting `r_dpo_alpha` between `0.0` and `1.0`.",
+        },
+    )
     discopop_tau: float = field(
         default=0.05,
         metadata={

@@ -1624,6 +1624,15 @@ class DPOTrainer(Trainer):
             rear_logps = (per_token_logps * rear_mask).sum(dim=1)
 
             all_logps = front_logps + self.args.ld_alpha * rear_logps
+        
+        if self.args.r_dpo_alpha is not None and not is_ref_model:
+            # Compute response lengths based on loss_mask
+            completion_lengths = loss_mask.sum(dim=1)
+
+            chosen_lengths = completion_lengths[:num_examples]
+            rejected_lengths = completion_lengths[num_examples:]
+
+            output["diff_lengths"] = chosen_lengths - rejected_lengths
 
         output["chosen_logps"] = all_logps[:num_examples]
         output["rejected_logps"] = all_logps[num_examples:]
@@ -1700,6 +1709,9 @@ class DPOTrainer(Trainer):
 
         if self.args.rpo_alpha is not None:
             losses = losses + self.args.rpo_alpha * model_output["nll_loss"]  # RPO loss from V3 of the paper
+        
+        if self.args.r_dpo_alpha is not None:
+            losses = losses + self.args.r_dpo_alpha * model_output["diff_lengths"]
 
         if self.use_weighting:
             losses = losses * model_output["policy_weights"]

@@ -18,11 +18,12 @@ import json
 import os
 import numpy as np
 import torch
-from tqdm import tqdm
+from tqdm.auto import tqdm
 import sys
 from transformers import pipeline
 from transformers import StoppingCriteria
 from datasets import load_dataset
+from transformers.pipelines.pt_utils import KeyDataset
 
 
 # PROMPT_INPUT = '<s>[INST] <<SYS>>\n You are a helpful, respectful and honest assistant. Always answer as helpfully as possible, while being safe.  Your answers should not include any harmful, unethical, racist, sexist, toxic, dangerous, or illegal content. Please ensure that your responses are socially unbiased and positive in nature.\nIf a question does not make any sense, or is not factually coherent, explain why instead of answering something not correct. If you don\'t know the answer to a question, please don\'t share false information.\n<</SYS>>\n{input}\n[/INST]'
@@ -113,12 +114,17 @@ def generate_answer(dataset, model_name_or_path: str, tokenizer_name_or_path: st
     answers = []
     
     print(f'Generating answers with {model_name_or_path}')
-    for data in tqdm(dataset):
-        prompt = [{"content": data['prompt'], "role": "user"}]
-        # prompt = PROMPT_INPUT.format(input=data['prompt'])
-        result = pipe(prompt, do_sample=True, temperature=1.0, num_return_sequences=num_per_prompt)
+    # for data in tqdm(dataset):
+    #     # prompt = [{"content": data['prompt'], "role": "user"}]
+    #     # prompt = PROMPT_INPUT.format(input=data['prompt'])
+    #     result = pipe(data["prompt"], do_sample=True, temperature=1.0, num_return_sequences=num_per_prompt)
+    #     for i in range(num_per_prompt):
+    #         answers.append(result[i]['generated_text'])
+    # results = 
+    for result in tqdm(pipe(KeyDataset(dataset, "prompt")[:10], do_sample=True, temperature=1.0, num_return_sequences=num_per_prompt, batch_size=16)):
         for i in range(num_per_prompt):
             answers.append(result[i]['generated_text'])
+            print(result[i]['generated_text'])
     return answers
 
 def duplicate_removal(dataset):
@@ -132,6 +138,12 @@ def duplicate_removal(dataset):
         return True
     return dataset.filter(check_duplicate)
 
+def dataset_format(dataset):
+    def format_example(example):
+        example["prompt"] = [{"content": example['prompt'], "role": "user"}]
+        return example
+    return dataset.map(format_example)
+
 def main() -> None:
     """The main function."""
     args = argument_parser()
@@ -140,6 +152,7 @@ def main() -> None:
 
     dataset = load_dataset(args.dataset_path, split="test")
     dataset = duplicate_removal(dataset)
+    dataset = dataset_format(dataset)
     
     answers = generate_answer(dataset, args.model_name_or_path, args.tokenizer_name_or_path, args.max_length, num_per_prompt)
     # print(an swers)
