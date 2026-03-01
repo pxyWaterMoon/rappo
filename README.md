@@ -1,5 +1,5 @@
 <h1 align="center">
-RAPPO: Keep the Best, Forget the Rest: Reliable Alignment with Order-Aware Preference Optimization
+RAPPO: Keep the Best, Forget the Rest
 </h1>
 
 <p align="center">
