@@ -1,4 +1,4 @@
-# RAPPO - Keep the Best, Forget the Rest: Reliable Alignment with Order-Aware Preference Optimization
+# RAPPO - Keep the Best, Forget the Rest: Reliable Alignment with Order-Aware Preference Optimizatio
 ![](alg_desc.png)
 This repository provides the official implementation​ of RAPPO, proposed in the paper [*Keep the Best, Forget the Rest: Reliable Alignment with Order-Aware Preference Optimization*](https://openreview.net/forum?id=LrHfYPFTtg). RAPPO (Reliable Alignment for Preference Policy Optimization) is a simple yet effective modification of the Direct Preference Optimization (DPO) loss. It addresses the sensitivity to noisy or ambiguous preference pairs by dynamically filtering out the most challenging samples during training, leading to more robust alignment and tighter generalization guarantees. The core pipeline is:
 1. Sample a mini-batch of preference data.
