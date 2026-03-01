@@ -39,15 +39,11 @@ This repository's source code is available under the [Apache-2.0 License](LICENS
 
 
 <h1 align="center">
-RAPPO: Keep the Best, Forget the Rest
+RAPPO: Keep the Best, Forget the Rest: Reliable Alignment with Order-Aware Preference Optimization
 </h1>
 
 <p align="center">
-<b>Reliable Alignment with Order-Aware Preference Optimization</b>
-</p>
-
-<p align="center">
-<a href="https://openreview.net/forum?id=LrHfYPFTtg">
+<a href="https://openreview.net/forum?id=LrHfYPFTtg&referrer=%5BAuthor%20Console%5D(%2Fgroup%3Fid%3DICLR.cc%2F2026%2FConference%2FAuthors%23your-submissions)">
   <img src="https://img.shields.io/badge/OpenReview-LrHfYPFTtg-blue" />
 </a>
 <a href="LICENSE">
@@ -108,8 +104,6 @@ Installation and usage follow the same process as **TRL**.
   - model & tokenizer loading
   - logging & checkpointing
 
-> Tip: If you already have TRL running for DPO, integrating RAPPO should require minimal changes—primarily swapping the trainer.
-
 ---
 
 ## Usage
@@ -132,6 +126,7 @@ alg/
   rappo_trainer.py          # RAPPO trainer implementation
 scripts/
   PKUSafeRLHF_launcher.py   # training launcher for PKU-SafeRLHF
+```
 
 
 
